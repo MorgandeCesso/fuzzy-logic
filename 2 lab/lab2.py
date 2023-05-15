@@ -1,3 +1,5 @@
+import re
+
 def create_matrix(size):
     matrix = [0] * size
     for i in range (size):
@@ -192,17 +194,31 @@ def get_relations(matrix, name):
         a += ' не линейно,'
     
     if trans(matrix):
-        a += ' транзитивность.'
+        a += ' транзитивность,'
+    else:
+        a += ' не транзитивно,'
 
     if a[-1] == ',':
         a = a[:-1] + '.'
 
     return a
 
+def parse(a):
+    content = re.findall('([-+]?\d*\.\d+|\d+)', a)
+    spisok = []
+    exec("spisok.extend(content)")
+    for i in range (0, len(spisok)):
+        spisok[i] = float(spisok[i])
+        i += 1
+    return spisok
 
-
-listA = [3600, 3600, 4600, 4000, 6000, 5000, 5250, 7600]
-listB = [2.2, 1.7, 2.75, 2.75, 16, 8, 11, 10]
+print('Введите множество A: ')
+a = input()
+print()
+print('Введите множество B: ')
+b = input()
+listA = parse(a)
+listB = parse(b)
 
 sizeA = len(listA)
 sizeB = len(listB)
@@ -223,12 +239,18 @@ midB = (maxB + minB) / 2
 
 affA = affilation_matrix(difA, sizeA, maxA, minA, midA, 'A')
 affB = affilation_matrix(difB, sizeB, maxB, minB, midB, 'B')
-
+print('Матрица разностей А')
+dif_matrix_output(matrixA, sizeA)
+print()
 print('Матрица принадлежности A')
 dif_matrix_output(affA, sizeA)
+print()
+print('Матрица разностей B')
+dif_matrix_output(matrixB, sizeB)
 print('Матрица принадлежности B')
 dif_matrix_output(affB, sizeB)
-
+print()
+print()
 a = get_relations(affA, 'A')
 print(a)
 b = get_relations(affB, 'B')
